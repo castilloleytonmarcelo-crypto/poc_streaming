@@ -259,5 +259,7 @@ __marimo__/
 # Backup files
 *.bak
 
-# Text files
-*.txtnotas.txt
+# Text y swap files
+*.txt
+notas.txt
+.swp
