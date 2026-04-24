@@ -1,9 +1,3 @@
-<<<<<<< HEAD
-=======
-# poc_streaming
-Pruebas de concepto de uso de streaming de video y teletexto
-=======
->>>>>>> 4f80d67 (Fix: Integrando documentación técnica de Watchdog)
 # Watchdog Stream: Arquitectura de Multiplexación Híbrida
 
 Este ecosistema de software implementa un protocolo de transporte ligero sobre **UDP** diseñado para la transmisión simultánea de flujos de video de alta carga y metadatos (teletexto) de baja latencia. El sistema está optimizado para entornos con hardware legado (como el procesador **Intel Xeon E5506**) y sistemas operativos **Ubuntu**.
