@@ -142,6 +142,143 @@ Bash
 *   **Análisis de Streaming:** Herramientas de telemetría integradas para reportar duración de sesión, FPS y estabilidad del flujo al finalizar la ejecución.
     
 
+RFCs fundamentales que dan validez técnica a esta implementación:
+
+* * *
+
+### 1\. El Pilar del Transporte: RFC 768 (UDP)
+
+Tu sistema utiliza **UDP (User Datagram Protocol)** para priorizar la velocidad sobre la fiabilidad.
+
+*   **Por qué aplica:** Es el estándar base para cualquier transmisión donde el _jitter_ y la latencia son más críticos que la recuperación de paquetes perdidos (perfecto para tu streaming en el Xeon).
+    
+*   **Relevancia:** Valida tu elección de no usar TCP para evitar el "head-of-line blocking".
+    
+
+### 2\. Tiempo Real y Sincronización: RFC 3550 (RTP)
+
+Aunque tu protocolo es personalizado (el header de 5 bytes), conceptualmente sigue los principios del **RTP (Real-time Transport Protocol)**.
+
+*   **Análisis de Latencia:** El RFC 3550 define cómo usar _timestamps_ y números de secuencia para reconstruir el tiempo de los medios y calcular el **Jitter**, tal como implementamos en tu `server.py`.
+    
+*   **Teletexto:** Este RFC contempla la carga útil (_payload_) de datos no visuales sincronizados con el video.
+    
+
+### 3\. Multiplexación de Datos: RFC 4571
+
+Este RFC describe cómo enmarcar múltiples flujos (como tu video y tu teletexto) para que viajen sobre un protocolo de transporte orientado a datagramas.
+
+*   **Tu implementación:** Tu cabecera binaria `struct.pack("!BI", tipo, longitud)` es una forma simplificada de lo que este RFC estandariza para separar canales de datos dentro de un mismo flujo.
+    
+
+### 4\. Payload de Video (JPEG): RFC 2435
+
+Como tu `client_unificado.py` utiliza `cv2.imencode('.jpg', ...)`, técnicamente te riges por el estándar de **RTP Payload Format for JPEG-compressed Video**.
+
+*   **Detalle técnico:** Define cómo se deben fragmentar y empaquetar los cuadros JPEG para que el receptor pueda reconstruirlos eficientemente.
+    
+
+* * *
+
+### Resumen de Respaldo Técnico para tu PoC
+
+Concepto
+
+RFC
+
+Función en tu Proyecto
+
+**Transporte**
+
+**RFC 768**
+
+Uso de Sockets UDP para baja latencia.
+
+**Telemetría**
+
+**RFC 3550**
+
+Lógica de Timestamps para medir Latencia E2E y Jitter.
+
+**Carga Útil**
+
+**RFC 2435**
+
+Transmisión de frames comprimidos en formato JPEG.
+
+**Encapsulación**
+
+**RFC 4571**
+
+Segmentación de canales (Video vs. Teletexto).
+
+* * *
+Esta sección explica no solo qué librerías usas, sino el **rol crítico** que cumple cada una dentro de la arquitectura de streaming y por qué seleccionamos versiones específicas para tu hardware Xeon.
+
+* * *
+
+📚 Referencia de Librerías y Dependencias
+-----------------------------------------
+
+El proyecto **Watchdog Stream PoC** utiliza un conjunto de librerías seleccionadas por su estabilidad, bajo consumo de recursos y compatibilidad con arquitecturas de servidor legadas.
+
+### 1\. Librerías Externas (Instalables vía Pip)
+
+Librería
+
+Versión
+
+Propósito en el Proyecto
+
+**OpenCV (`opencv-python`)**
+
+`4.5.5.62`
+
+Gestión de captura de video, codificación/decodificación JPEG y renderizado de la interfaz gráfica del monitor.
+
+**NumPy (`numpy`)**
+
+`1.26.4`
+
+Manejo de estructuras de datos matriciales (frames) y manipulación de buffers binarios de alta velocidad.
+
+Exportar a Hojas de cálculo
+
+> **Nota del Arquitecto:** Se utiliza **NumPy 1.26.4** para evitar incompatibilidades de la ABI con la versión 2.0+, asegurando que el procesamiento de imágenes en Ubuntu 26.04 sea fluido sobre el hardware Intel Xeon.
+
+### 2\. Librerías Nativas de Python (Standard Library)
+
+Estas librerías no requieren instalación adicional y son fundamentales para el funcionamiento del protocolo:
+
+*   **`socket`**: Implementa la interfaz de red de bajo nivel. Es el motor que gestiona los datagramas UDP para el transporte de video y teletexto.
+    
+*   **`struct`**: Crucial para la **Multiplexación Binaria**. Permite empaquetar y desempaquetar la cabecera de 5 bytes `[Tipo][Longitud]` en formato C compatible (`!BI`).
+    
+*   **`unittest`**: Framework integrado para la validación de la integridad del protocolo mediante las pruebas unitarias incluidas en cada script.
+    
+*   **`subprocess`**: Utilizada por el sistema de **Autoinstalación** para gestionar el entorno de dependencias sin intervención del usuario.
+    
+*   **`time`**: Responsable de la generación de _timestamps_ para el cálculo de **Latencia End-to-End** y **Jitter**.
+    
+*   **`os` & `sys`**: Gestión de rutas de archivos, variables de entorno (`LOGLEVEL`) y control de señales del sistema operativo.
+
+* * *
+
+### 📡 Relación de Librerías en el Flujo de Datos
+
+1.  **Captura:** `opencv` toma el frame de la cámara.
+    
+2.  **Procesamiento:** `numpy` convierte el frame en un buffer comprimido.
+    
+3.  **Empaquetado:** `struct` añade la cabecera técnica de Watchdog.
+    
+4.  **Transporte:** `socket` envía el paquete vía UDP.
+    
+5.  **Análisis:** `time` y `unittest` validan que la entrega sea estable y correcta.
+    
+
+Esta estructura garantiza que tu PoC sea modular y fácil de portar a otros servidores dentro de tu red local o entornos de producción.
+
 * * *
 
 **Arquitecto Responsable:** Marcelo Castillo
