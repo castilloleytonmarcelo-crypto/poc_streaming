@@ -54,3 +54,4 @@ git push -u origin main
 
 
 git commit -m "Arquitectura de streaming híbrido diseñada para la transmisión multiplexada de **Video (Canal 0)** y **Teletexto/Telemetría (Canal 1)** sobre el protocolo UDP."
+git commit -m "ADD: Watchdog Stream Architecture - Watchdog Service Control"
