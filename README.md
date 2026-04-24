@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+=======
+# poc_streaming
+Pruebas de concepto de uso de streaming de video y teletexto
+=======
+>>>>>>> 4f80d67 (Fix: Integrando documentación técnica de Watchdog)
 # Watchdog Stream: Arquitectura de Multiplexación Híbrida
 
 Este ecosistema de software implementa un protocolo de transporte ligero sobre **UDP** diseñado para la transmisión simultánea de flujos de video de alta carga y metadatos (teletexto) de baja latencia. El sistema está optimizado para entornos con hardware legado (como el procesador **Intel Xeon E5506**) y sistemas operativos **Ubuntu**.
@@ -23,6 +29,7 @@ Para realizar una instalación manual de las dependencias base:
 
 ```bash
 pip install -r requirements.txt
+pip install --force-reinstall -r requirements.txt
 
 # Watchdog Stream PoC
 
@@ -147,4 +154,9 @@ Bash
 
 **Proyecto:** Watchdog Streaming Monitoring System
 
+<<<<<<< HEAD
 **Repositorio Oficial:** [poc\_streaming](https://github.com/castilloleytonmarcelo-crypto/poc_streaming.git)
+=======
+**Repositorio Oficial:** [poc\_streaming](https://github.com/castilloleytonmarcelo-crypto/poc_streaming.git)
+ (Arquitectura de streaming híbrido diseñada para la transmisión multiplexada de **Video (Canal 0)** y **Teletexto/Telemetría (Canal 1)** sobre el protocolo UDP.)
+>>>>>>> 4f80d67 (Fix: Integrando documentación técnica de Watchdog)
