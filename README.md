@@ -148,9 +148,6 @@ Bash
 
 **Proyecto:** Watchdog Streaming Monitoring System
 
-<<<<<<< HEAD
-**Repositorio Oficial:** [poc\_streaming](https://github.com/castilloleytonmarcelo-crypto/poc_streaming.git)
-=======
 **Repositorio Oficial:** [poc\_streaming](https://github.com/castilloleytonmarcelo-crypto/poc_streaming.git)
  (Arquitectura de streaming híbrido diseñada para la transmisión multiplexada de **Video (Canal 0)** y **Teletexto/Telemetría (Canal 1)** sobre el protocolo UDP.)
->>>>>>> 4f80d67 (Fix: Integrando documentación técnica de Watchdog)
+
